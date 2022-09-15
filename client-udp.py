@@ -3,7 +3,7 @@ import socket
 import string
 
 def main():
-    HOST = '192.168.1.6'
+    HOST = '192.168.3.188'
     PORT = 5000
     udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     dest = (HOST, PORT)
@@ -14,7 +14,7 @@ def main():
     while True:
         connectionString = input("--> ")
     
-        if connectionString != 'connect':    
+        if connectionString != 'connect':
             print("Digitação errada, digite 'connect' para continuar!")
         else:
             username = input('User --> ')
@@ -36,19 +36,15 @@ def main():
     while True:
         passw = input("--> ")
         if passw != 'unsubscribe':
-            print("Palavra errada! Digite a palavra 'unsubscribe' para sair da lista!")
-            
+            sendMsg(udp, username, passw)   
+        
         else:
             print("Você saiu da lista!")
             break
-    
-    while True:
-        sendMsg(udp, username)   
 
 def receiveMsg (udp):
     while True:
-        try: 
-            
+        try:
             msg = udp.recv(1024).decode('utf-8')
             print(msg+'\n')
         except:
@@ -56,15 +52,14 @@ def receiveMsg (udp):
             print("\n Obrigado! volte sempre.")
             break
 
-def sendMsg (udp, username):
+def sendMsg (udp, username, msg):
     while True:
-        try:          
-                msg = input("\n")
-                if msg != 'exit':
-                    msg = udp.sendto(f'<{username}> {msg}'.encode('utf-8'))
-                else:
-                    udp.close()
-                    break
+        try:
+            if msg != 'exit':
+                msg = udp.sendto(f'<{username}> {msg}'.encode('utf-8'))
+            else:
+                udp.close()
+                break
         except:
             return
 main()
